@@ -11,4 +11,7 @@ def validate_products(products: Iterable[Product]) -> Iterable[Product]:
         if not prod.size_mb:
             log.warning(f"No size for {prod.id}")
             continue
+        if (prod.id.startswith("proshop:") and prod.id.endswith("d")) or "*DEMO*" in prod.name:
+            log.warning(f"Skipping demo product {prod.id}")
+            continue
         yield prod
