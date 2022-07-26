@@ -6,6 +6,7 @@ import bs4
 import httpx
 
 from lerppu.inference.size import get_mb_size_from_name
+from lerppu.inference.sku import infer_sku_from_name
 from lerppu.inference.vendor import infer_vendor_from_name
 from lerppu.models import Product
 
@@ -26,9 +27,9 @@ def massage_proshop(prod_li: bs4.Tag) -> Product:
     name = prod_li.select_one("h2").text
     description = prod_li.select_one(".truncate-overflow").text
     pre_div = prod_li.select_one("div.site-currency-pre")
-    original_price = parse_eur(pre_div.text) if pre_div else None
     current_price = parse_eur(prod_li.select_one("span.site-currency-lg").text)
-    vendor_sku = ""  # TODO
+    original_price = parse_eur(pre_div.text) if pre_div else current_price
+    vendor_sku = infer_sku_from_name(name) or ""
     manufacturer = infer_vendor_from_name(name)
     size = get_mb_size_from_name(name) or get_mb_size_from_name(description)
     return Product(

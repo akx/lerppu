@@ -28,6 +28,7 @@ def do_process(output_dir: str) -> None:
     df = pd.DataFrame(products)
     df.drop(columns=["_original"], inplace=True)
     df["gb_per_eur"] = (df["size_mb"] / df["current_price"] / 1024.0).round(3)
+    df["discount"] = (df["original_price"] - df["current_price"]).round(2)
     df.sort_values("gb_per_eur", ascending=False, inplace=True)
     os.makedirs(output_dir, exist_ok=True)
     log.info("Writing output...")
