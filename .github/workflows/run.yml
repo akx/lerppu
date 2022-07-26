@@ -1,0 +1,27 @@
+name: Run
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  Run:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
+          cache: "pip"
+      - run: "pip install -r requirements.txt"
+      - run: python -m lerppu
+      - run: touch output/.nojekyll
+      - uses: JamesIves/github-pages-deploy-action@4.0.0
+        with:
+          branch: gh-pages
+          folder: output
+        if: ${{ github.event_name == 'push' || github.event_name == 'cron' }}
