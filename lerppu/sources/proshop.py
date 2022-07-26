@@ -24,16 +24,18 @@ def massage_proshop(prod_li: bs4.Tag) -> Product:
     url = "https://proshop.fi" + prod_a.get("href")
     pid = prod_li.select_one("input[name=productId]")["value"]
     name = prod_li.select_one("h2").text
+    description = prod_li.select_one(".truncate-overflow").text
     pre_div = prod_li.select_one("div.site-currency-pre")
     original_price = parse_eur(pre_div.text) if pre_div else None
     current_price = parse_eur(prod_li.select_one("span.site-currency-lg").text)
     vendor_sku = ""  # TODO
     manufacturer = infer_vendor_from_name(name)
+    size = get_mb_size_from_name(name) or get_mb_size_from_name(description)
     return Product(
         id=f"proshop:{pid}",
         source="proshop",
         name=name,
-        size_mb=get_mb_size_from_name(name),
+        size_mb=size,
         original_price=original_price,
         current_price=current_price,
         url=url,

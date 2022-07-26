@@ -1,7 +1,7 @@
 import re
 from typing import Optional
 
-size_re = re.compile(r"(?P<num>\d+)\s*(?P<unit>[tgm])[bt]?\s", flags=re.I)
+size_re = re.compile(r"(?P<num>\d+)\s*(?P<unit>[tgm])[bt]?[\s,]", flags=re.I)
 
 multipliers = {
     "t": 1024 * 1024,

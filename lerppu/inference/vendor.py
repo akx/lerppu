@@ -27,4 +27,6 @@ def infer_vendor_from_name(name: str) -> Optional[str]:
 
 
 def canonicalize_vendor(vendor: str) -> str:
-    return known_vendors.get(vendor.lower(), vendor)
+    vendor = known_vendors.get(vendor.lower(), vendor)
+    vendor = vendor.replace(", Inc.", "")
+    return vendor
