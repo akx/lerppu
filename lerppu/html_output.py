@@ -76,8 +76,9 @@ def write_html(html_filename, df: pd.DataFrame) -> None:
         now = datetime.datetime.utcnow().isoformat()
         f.write(
             f"Generated {now}; {len(df)} records. "
-            f'Also see <a href="data.csv">data.csv</a> '
-            f'and <a href="data.json">data.json</a>'
+            f'Also see <a href="data.csv">data.csv</a> / '
+            f'<a href="data.json">data.json</a> /'
+            f'<a href="data.html">data.html</a>'
         )
         f.write("<hr />")
         f.write("<div id='plot'>")
