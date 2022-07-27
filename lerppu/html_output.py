@@ -47,7 +47,6 @@ $(document).ready( function () {
 
 
 def get_plot_html(df) -> str:
-    df["size_tb"] = (df["size_mb"] / 1024 / 1024).round(2)
     # Don't plot products that are clearly way out of the usual price range
     culled_df = df[df["current_price"] < df["current_price"].median() * 3]
     fig = px.scatter(
@@ -63,7 +62,26 @@ def get_plot_html(df) -> str:
 
 def get_table_html(df) -> str:
     sio = io.StringIO()
-    df.to_html(sio, table_id="data", render_links=True, index=False, border=0)
+    df.to_html(
+        sio,
+        table_id="data",
+        render_links=True,
+        index=False,
+        border=0,
+        columns=[
+            "id",
+            "vendor_sku",
+            "manufacturer",
+            "name",
+            "size_tb",
+            "url",
+            "original_price",
+            "current_price",
+            "discount",
+            "gb_per_eur",
+            "eur_per_tb",
+        ],
+    )
     return sio.getvalue()
 
 
