@@ -2,3 +2,4 @@ httpx~=0.23
 pandas~=1.4
 beautifulsoup4~=4.11
 plotly~=5.9
+diskcache~=5.4

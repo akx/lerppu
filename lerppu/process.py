@@ -2,9 +2,11 @@ import logging
 import os
 from itertools import chain
 
+import diskcache
 import httpx
 import pandas as pd
 
+from lerppu.caching_http_transport import CachingHTTPTransport
 from lerppu.html_output import write_html
 from lerppu.sources import verk, jimms, proshop
 from lerppu.validation import validate_products
@@ -12,9 +14,16 @@ from lerppu.validation import validate_products
 log = logging.getLogger(__name__)
 
 
-def do_process(output_dir: str) -> None:
+def do_process(output_dir: str, use_cache: bool) -> None:
     log.info("Downloading information...")
-    with httpx.Client() as sess:
+    transport = (
+        CachingHTTPTransport(
+            cache=diskcache.Cache("./cache", disk_min_file_size=1048576)
+        )
+        if use_cache
+        else None
+    )
+    with httpx.Client(transport=transport) as sess:
         products = list(
             validate_products(
                 chain(
