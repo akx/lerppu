@@ -24,4 +24,4 @@ jobs:
         with:
           branch: gh-pages
           folder: output
-        if: ${{ github.event_name == 'push' || github.event_name == 'cron' }}
+        if: ${{ github.event_name == 'push' || github.event_name == 'schedule' }}
