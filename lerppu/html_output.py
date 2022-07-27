@@ -9,7 +9,11 @@ HTML_PRELUDE = """<html>
 <meta charset="utf-8">
 <style>
 body, td, th {
-font: 10pt sans-serif;
+    font: 10pt sans-serif;
+}
+#plot {
+    max-width: 800px;
+    max-height: 600px;
 }
 table {
   border-collapse: collapse;
@@ -24,9 +28,22 @@ tr:hover td {
     background-color: #dee !important;
 }
 </style>
+<link rel='stylesheet' href='https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css'>
 </head>
 <body>"""
-HTML_POSTLUDE = "</body></html>"
+HTML_POSTLUDE = """
+<script
+  src="https://code.jquery.com/jquery-3.6.0.slim.min.js"
+  integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI="
+  crossorigin="anonymous"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script>
+$(document).ready( function () {
+    $('#data').DataTable({paging: false});
+} );
+</script>
+</body></html>
+"""
 
 
 def get_plot_html(df) -> str:
@@ -36,12 +53,17 @@ def get_plot_html(df) -> str:
     fig = px.scatter(
         culled_df, x="current_price", y="size_tb", hover_name="id", color="manufacturer"
     )
-    return fig.to_html(full_html=False, default_width="50%", default_height="50%")
+    return fig.to_html(
+        full_html=False,
+        default_width="",
+        default_height="",
+        include_plotlyjs="cdn",
+    )
 
 
 def get_table_html(df) -> str:
     sio = io.StringIO()
-    df.to_html(sio, render_links=True, border=0)
+    df.to_html(sio, table_id="data", render_links=True, index=False, border=0)
     return sio.getvalue()
 
 
@@ -58,7 +80,9 @@ def write_html(html_filename, df: pd.DataFrame) -> None:
             f'and <a href="data.json">data.json</a>'
         )
         f.write("<hr />")
+        f.write("<div id='plot'>")
         f.write(plot_html)
+        f.write("</div>")
         f.write(f"<hr />")
         f.write(table_html)
         f.write(HTML_POSTLUDE)
