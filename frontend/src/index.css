@@ -1,0 +1,45 @@
+body {
+    margin: 0;
+}
+
+code {
+    font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+td {
+    vertical-align: top;
+}
+
+body, td, th {
+    font: 10pt sans-serif;
+}
+
+#plot {
+    max-width: 800px;
+    max-height: 600px;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+td, th {
+    border: 1px solid #ddd;
+    padding: 3px;
+}
+
+tr:nth-child(even) td {
+    background-color: #eefff5;
+}
+
+tr:hover td {
+    background-color: #dee !important;
+}
+
+table.data {
+    width: 100%
+}
+
+td.num, th.num {
+    text-align: right;
+}
