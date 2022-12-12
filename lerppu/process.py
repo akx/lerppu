@@ -40,6 +40,7 @@ def do_process(output_dir: str, use_cache: bool) -> None:
     df["size_tb"] = (df["size_mb"] / 1024 / 1024).round(2)
     df["eur_per_tb"] = (df["current_price"] / df["size_tb"]).round(3)
     df.drop(columns=["_original", "size_mb"], inplace=True)
+    df.drop_duplicates(subset="id", keep="first", inplace=True)
     df.sort_values("gb_per_eur", ascending=False, inplace=True)
     os.makedirs(output_dir, exist_ok=True)
     log.info("Writing data...")
