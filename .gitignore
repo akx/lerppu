@@ -1,3 +1,4 @@
 *.py[cod]
 /cache
+/frontend/data.json
 /output
