@@ -5,13 +5,16 @@ log = logging.getLogger(__name__)
 
 known_vendors = {
     "dell": "Dell",
+    "fujitsu": "Fujitsu",
+    "hewlett packard enterprise": "HPE",
     "hgst": "HGST",
+    "ibm": "IBM",
+    "intel": "Intel",
+    "lenovo": "Lenovo",
     "seagate": "Seagate",
     "toshiba": "Toshiba",
     "wd": "Western Digital",
     "western digital": "Western Digital",
-    "fujitsu": "Fujitsu",
-    "lenovo": "Lenovo",
 }
 
 
