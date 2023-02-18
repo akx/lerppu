@@ -7,8 +7,9 @@ import httpx
 
 from lerppu.inference.size import get_mb_size_from_name
 from lerppu.inference.sku import infer_sku_from_name
+from lerppu.inference.type import get_connection_type_from_data
 from lerppu.inference.vendor import infer_vendor_from_name
-from lerppu.models import Product
+from lerppu.models import ConnectionType, MediaType, Product
 
 log = logging.getLogger(__name__)
 
@@ -20,7 +21,11 @@ def parse_eur(text: str) -> float:
     return float(text)
 
 
-def massage_proshop(prod_li: bs4.Tag) -> Product:
+def massage_proshop(
+    prod_li: bs4.Tag,
+    *,
+    media_type: MediaType,
+) -> Product:
     prod_a = prod_li.select_one("a")
     url = "https://proshop.fi" + prod_a.get("href")
     pid = prod_li.select_one("input[name=productId]")["value"]
@@ -32,7 +37,13 @@ def massage_proshop(prod_li: bs4.Tag) -> Product:
     vendor_sku = infer_sku_from_name(name) or ""
     manufacturer = infer_vendor_from_name(name)
     size = get_mb_size_from_name(name) or get_mb_size_from_name(description)
+    connection_type = (
+        get_connection_type_from_data(name=name, description=description)
+        or ConnectionType.UNKNOWN
+    )
     return Product(
+        media_type=media_type,
+        connection_type=connection_type,
         id=f"proshop:{pid}",
         source="proshop",
         name=name,
@@ -46,7 +57,9 @@ def massage_proshop(prod_li: bs4.Tag) -> Product:
     )
 
 
-def get_category_products(cli: httpx.Client, *, category_id: str) -> Iterable[Product]:
+def get_category_products(
+    cli: httpx.Client, *, category_id: str, media_type: MediaType
+) -> Iterable[Product]:
     for page_no in count(1):
         log.info(f"Fetching page {page_no} of category {category_id}")
         resp = cli.get(
@@ -62,4 +75,4 @@ def get_category_products(cli: httpx.Client, *, category_id: str) -> Iterable[Pr
         if not product_lis:
             break
         for prod in product_lis:
-            yield massage_proshop(prod)
+            yield massage_proshop(prod, media_type=media_type)

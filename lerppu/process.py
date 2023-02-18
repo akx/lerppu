@@ -1,6 +1,8 @@
 import logging
 import os
+from collections.abc import Iterable
 from itertools import chain
+from operator import attrgetter
 
 import diskcache
 import httpx
@@ -8,10 +10,62 @@ import pandas as pd
 
 from lerppu.caching_http_transport import CachingHTTPTransport
 from lerppu.html_output import write_html
+from lerppu.models import ConnectionType, MediaType, Product
 from lerppu.sources import jimms, proshop, verk
 from lerppu.validation import validate_products
 
 log = logging.getLogger(__name__)
+
+
+def get_sources(sess: httpx.Client) -> Iterable[Iterable[Product]]:
+    return [
+        verk.get_category_products(
+            sess,
+            category_id="3704c",
+            connection_type=ConnectionType.SATA,
+            media_type=MediaType.HDD,
+        ),
+        verk.get_category_products(
+            sess,
+            category_id="2225c",
+            connection_type=ConnectionType.SATA,
+            media_type=MediaType.SSD,
+        ),
+        verk.get_category_products(
+            sess,
+            category_id="11860c",
+            connection_type=ConnectionType.M2,
+            media_type=MediaType.SSD,
+        ),
+        jimms.get_category_products(
+            sess,
+            category_id="000-0MU",
+            connection_type=ConnectionType.SATA,
+            media_type=MediaType.HDD,
+        ),
+        jimms.get_category_products(
+            sess,
+            category_id="000-0EE",
+            connection_type=ConnectionType.SATA,
+            media_type=MediaType.SSD,
+        ),
+        jimms.get_category_products(
+            sess,
+            category_id="000-1AR",
+            connection_type=ConnectionType.M2,
+            media_type=MediaType.SSD,
+        ),
+        proshop.get_category_products(
+            sess,
+            category_id="Kovalevy",
+            media_type=MediaType.HDD,
+        ),
+        proshop.get_category_products(
+            sess,
+            category_id="SSD",
+            media_type=MediaType.SSD,
+        ),
+    ]
 
 
 def do_process(output_dir: str, use_cache: bool) -> None:
@@ -24,21 +78,15 @@ def do_process(output_dir: str, use_cache: bool) -> None:
         else None
     )
     with httpx.Client(transport=transport) as sess:
-        products = list(
-            validate_products(
-                chain(
-                    verk.get_category_products(sess, category_id="3704c"),
-                    jimms.get_category_products(sess, category_id="000-0MU"),
-                    proshop.get_category_products(sess, category_id="Kovalevy"),
-                )
-            )
-        )
+        products = list(validate_products(chain(*get_sources(sess))))
     log.info("Creating dataframe...")
     df = pd.DataFrame(products)
     df["gb_per_eur"] = (df["size_mb"] / df["current_price"] / 1024.0).round(3)
     df["discount"] = (df["original_price"] - df["current_price"]).round(2)
     df["size_tb"] = (df["size_mb"] / 1024 / 1024).round(2)
     df["eur_per_tb"] = (df["current_price"] / df["size_tb"]).round(3)
+    df["connection_type"] = df["connection_type"].apply(attrgetter("value"))
+    df["media_type"] = df["media_type"].apply(attrgetter("value"))
     df.drop(columns=["_original", "size_mb"], inplace=True)
     df.drop_duplicates(subset="id", keep="first", inplace=True)
     df.sort_values("gb_per_eur", ascending=False, inplace=True)

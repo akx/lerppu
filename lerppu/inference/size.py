@@ -11,7 +11,7 @@ multipliers = {
 }
 
 
-def get_mb_size_from_name(name: str) -> Optional[int]:
+def get_mb_size_from_name(name: str) -> int | None:
     """
     >>> get_mb_size_from_name('Kingston DC500M 1,92 Tt SATA III 2,5" SSD-levy')
     2013265
