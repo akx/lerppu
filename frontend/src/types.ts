@@ -12,7 +12,7 @@ export interface HDProduct {
   gb_per_eur: number;
   discount: number;
   size_tb: number;
-  eur_per_tb: number;
+  eur_per_tb: number | null;
 }
 
 export interface HDProductEx extends HDProduct {

@@ -1,7 +1,9 @@
 import React from "react";
-import useSWR from "swr";
-import { HDProduct, HDProductEx } from "./types";
+import { HDProductEx } from "./types";
 import { connectionTypeNames, mediaTypeNames } from "./consts";
+import { MultiSelect } from "./components/MultiSelect";
+import { useLerppuData } from "./hooks";
+import DataTable from "./components/DataTable";
 
 const sortOptions = [
   "current_price",
@@ -11,56 +13,6 @@ const sortOptions = [
   "original_price",
 ] as const;
 type SortOption = typeof sortOptions[number];
-
-function MultiSelect({
-  options,
-  selected,
-  onChange,
-  labels = {},
-}: {
-  options: string[];
-  selected: readonly string[];
-  onChange: (selected: string[]) => void;
-  labels?: Record<string, string>;
-}) {
-  return (
-    <>
-      <select
-        multiple
-        size={options.length}
-        onChange={(event) => {
-          onChange(
-            Array.from(event.target.selectedOptions, (option) => option.value),
-          );
-        }}
-        value={selected}
-      >
-        {options.map((value) => (
-          <option key={value} value={value}>
-            {labels[value] ?? value}
-          </option>
-        ))}
-      </select>
-      <br />
-      <button onClick={() => onChange([])}>Clear</button>
-    </>
-  );
-}
-
-function useLerppuData(): HDProductEx[] {
-  const dataSWR = useSWR<HDProduct[]>("/data.json", (url: string) =>
-    fetch(url).then((r) => r.json()),
-  );
-  const data: HDProductEx[] = React.useMemo(
-    () =>
-      (dataSWR.data || []).map((p) => ({
-        ...p,
-        discount_pct: (1.0 - p.current_price / p.original_price) * 100,
-      })),
-    [dataSWR.data],
-  );
-  return data;
-}
 
 function App() {
   const data = useLerppuData();
@@ -280,67 +232,7 @@ function App() {
           </tr>
         </tbody>
       </table>
-      <table className="data">
-        <thead>
-          <tr>
-            <th>Manufacturer</th>
-            <th>SKU</th>
-            <th>Name</th>
-            <th>Conn. Type</th>
-            <th>Media Type</th>
-            <th>Size (TB)</th>
-            <th>Current Price</th>
-            <th>Original Price</th>
-            <th>Discount</th>
-            <th>Discount%</th>
-            <th>EUR per TB</th>
-            <th>GB per EUR</th>
-            <th>URL</th>
-          </tr>
-        </thead>
-        <tbody>
-          {sortedData.map(
-            ({
-              connection_type,
-              current_price,
-              discount,
-              discount_pct,
-              eur_per_tb,
-              gb_per_eur,
-              id,
-              manufacturer,
-              media_type,
-              name,
-              original_price,
-              size_tb,
-              url,
-              vendor_sku,
-            }) => (
-              <tr key={id}>
-                <td>{manufacturer}</td>
-                <td>{vendor_sku}</td>
-                <td>{name}</td>
-                <td>
-                  {connectionTypeNames[connection_type] ?? connection_type}
-                </td>
-                <td>{mediaTypeNames[media_type] ?? media_type}</td>
-                <td className="num">{size_tb}</td>
-                <td className="num">{current_price.toFixed(2)}</td>
-                <td className="num">{original_price.toFixed(2)}</td>
-                <td className="num">{discount != 0 ? discount : ""}</td>
-                <td className="num">
-                  {discount != 0 ? discount_pct.toFixed(2) + "%" : ""}
-                </td>
-                <td className="num">{eur_per_tb.toFixed(3)}</td>
-                <td className="num">{gb_per_eur.toFixed(3)}</td>
-                <td>
-                  <a href={url}>{url}</a>
-                </td>
-              </tr>
-            ),
-          )}
-        </tbody>
-      </table>
+      <DataTable sortedData={sortedData} />
     </div>
   );
 }
