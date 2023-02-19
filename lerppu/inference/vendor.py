@@ -3,7 +3,8 @@ import logging
 log = logging.getLogger(__name__)
 
 known_vendors = {
-    "a-data": "A-Data",
+    "a-data": "Adata",
+    "adata": "Adata",
     "corsair": "Corsair",
     "crucial": "Crucial",
     "dell": "Dell",
@@ -12,6 +13,7 @@ known_vendors = {
     "goodram": "Goodram",
     "hewlett packard enterprise": "HPE",
     "hgst": "HGST",
+    "hp enterprise": "HPE",
     "ibm": "IBM",
     "intel": "Intel",
     "intenso": "Intenso",
@@ -20,6 +22,7 @@ known_vendors = {
     "lenovo": "Lenovo",
     "lexar": "Lexar",
     "patriot": "Patriot",
+    "pny technologies": "PNY",
     "pny": "PNY",
     "samsung": "Samsung",
     "sandisk": "Sandisk",
