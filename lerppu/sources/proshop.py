@@ -38,8 +38,7 @@ def massage_proshop(
     manufacturer = infer_vendor_from_name(name)
     size = get_mb_size_from_name(name) or get_mb_size_from_name(description)
     connection_type = (
-        get_connection_type_from_data(name=name, description=description)
-        or ConnectionType.UNKNOWN
+        get_connection_type_from_data([name, description]) or ConnectionType.UNKNOWN
     )
     return Product(
         media_type=media_type,

@@ -11,7 +11,7 @@ import pandas as pd
 from lerppu.caching_http_transport import CachingHTTPTransport
 from lerppu.html_output import write_html
 from lerppu.models import ConnectionType, MediaType, Product
-from lerppu.sources import jimms, proshop, verk
+from lerppu.sources import dustinhome, jimms, proshop, verk
 from lerppu.validation import validate_products
 
 log = logging.getLogger(__name__)
@@ -63,6 +63,16 @@ def get_sources(sess: httpx.Client) -> Iterable[Iterable[Product]]:
         proshop.get_category_products(
             sess,
             category_id="SSD",
+            media_type=MediaType.SSD,
+        ),
+        dustinhome.get_category_products(
+            sess,
+            category_id="2030994",
+            media_type=MediaType.HDD,
+        ),
+        dustinhome.get_category_products(
+            sess,
+            category_id="2032014",
             media_type=MediaType.SSD,
         ),
     ]
