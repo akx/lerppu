@@ -4,7 +4,7 @@ import logging
 from lerppu.process import do_process
 
 
-def main():
+def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("-d", "--output-dir", default="output")
     ap.add_argument("-c", "--use-cache", default=False, action="store_true")

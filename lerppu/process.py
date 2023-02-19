@@ -8,7 +8,7 @@ import pandas as pd
 
 from lerppu.caching_http_transport import CachingHTTPTransport
 from lerppu.html_output import write_html
-from lerppu.sources import verk, jimms, proshop
+from lerppu.sources import jimms, proshop, verk
 from lerppu.validation import validate_products
 
 log = logging.getLogger(__name__)

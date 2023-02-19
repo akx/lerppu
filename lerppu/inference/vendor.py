@@ -1,5 +1,4 @@
 import logging
-from typing import Optional
 
 log = logging.getLogger(__name__)
 
@@ -18,7 +17,7 @@ known_vendors = {
 }
 
 
-def infer_vendor_from_name(name: str) -> Optional[str]:
+def infer_vendor_from_name(name: str) -> str | None:
     name = name.lower()
     for moniker, canonical in known_vendors.items():
         if moniker in name:

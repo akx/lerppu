@@ -1,8 +1,8 @@
 import datetime
 import io
 
-import plotly.express as px
 import pandas as pd
+import plotly.express as px
 
 HTML_PRELUDE = """<html>
 <head>
@@ -46,7 +46,7 @@ $(document).ready( function () {
 """
 
 
-def get_plot_html(df) -> str:
+def get_plot_html(df: pd.DataFrame) -> str:
     # Don't plot products that are clearly way out of the usual price range
     culled_df = df[df["current_price"] < df["current_price"].median() * 3]
     fig = px.scatter(
@@ -60,7 +60,7 @@ def get_plot_html(df) -> str:
     )
 
 
-def get_table_html(df) -> str:
+def get_table_html(df: pd.DataFrame) -> str:
     sio = io.StringIO()
     df.to_html(
         sio,
@@ -85,7 +85,7 @@ def get_table_html(df) -> str:
     return sio.getvalue()
 
 
-def write_html(html_filename, df: pd.DataFrame) -> None:
+def write_html(html_filename: str, df: pd.DataFrame) -> None:
     table_html = get_table_html(df)
     plot_html = get_plot_html(df)
 
@@ -102,6 +102,6 @@ def write_html(html_filename, df: pd.DataFrame) -> None:
         f.write("<div id='plot'>")
         f.write(plot_html)
         f.write("</div>")
-        f.write(f"<hr />")
+        f.write("<hr />")
         f.write(table_html)
         f.write(HTML_POSTLUDE)

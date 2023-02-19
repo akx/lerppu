@@ -1,9 +1,10 @@
+from __future__ import annotations
+
 import hashlib
 import logging
-from typing import Optional
 
 import diskcache
-from httpx import HTTPTransport, Request, Response, ByteStream
+from httpx import ByteStream, HTTPTransport, Request, Response
 
 log = logging.getLogger(__name__)
 
@@ -26,7 +27,7 @@ class CachingHTTPTransport(HTTPTransport):
             self.cache.set(key, resp, expire=60 * 60 * 4)
         return resp
 
-    def get_request_cache_key(self, request: Request) -> Optional[str]:
+    def get_request_cache_key(self, request: Request) -> str | None:
         if not isinstance(request.stream, ByteStream):  # ah, nope
             return None
         body_hash = hashlib.sha256(request.stream._stream).hexdigest()
