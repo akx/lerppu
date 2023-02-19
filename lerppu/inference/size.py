@@ -1,5 +1,4 @@
 import re
-from typing import Optional
 
 size_re = re.compile(r"(?P<num>\d+)\s*(?P<unit>[tgm])[bt]?[\s,]", flags=re.I)
 
@@ -10,7 +9,7 @@ multipliers = {
 }
 
 
-def get_mb_size_from_name(name: str) -> Optional[int]:
+def get_mb_size_from_name(name: str) -> int | None:
     match = size_re.search(name)
     if not match:
         return None

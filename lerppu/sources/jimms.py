@@ -1,6 +1,6 @@
 import logging
+from collections.abc import Iterable
 from itertools import count
-from typing import Iterable
 
 import httpx
 

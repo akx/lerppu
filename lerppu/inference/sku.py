@@ -1,5 +1,4 @@
 import re
-from typing import Optional
 
 sku_regexps = [
     re.compile(r"ST\d+\w+"),  # Seagate, eg. ST2000DM008
@@ -8,7 +7,7 @@ sku_regexps = [
 ]
 
 
-def infer_sku_from_name(name: str) -> Optional[str]:
+def infer_sku_from_name(name: str) -> str | None:
     for regexp in sku_regexps:
         match = regexp.search(name)
         if match:

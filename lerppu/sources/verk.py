@@ -1,13 +1,12 @@
 import logging
+from collections.abc import Iterable
 from itertools import count
-from typing import Iterable
 
 import httpx
 
 from lerppu.inference.size import get_mb_size_from_name
 from lerppu.inference.vendor import canonicalize_vendor
 from lerppu.models import Product
-
 
 log = logging.getLogger(__name__)
 
