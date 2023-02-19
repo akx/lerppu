@@ -1,5 +1,7 @@
 export interface HDProduct {
   id: string;
+  connection_type: string;
+  media_type: string;
   name: string;
   original_price: number;
   current_price: number;
