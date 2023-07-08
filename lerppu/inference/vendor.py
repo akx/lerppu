@@ -4,6 +4,7 @@ log = logging.getLogger(__name__)
 
 known_vendors = {
     "a-data": "Adata",
+    "acer": "Acer",
     "adata": "Adata",
     "corsair": "Corsair",
     "crucial": "Crucial",
