@@ -2,7 +2,7 @@ import logging
 import os
 from collections.abc import Iterable
 from itertools import chain
-from operator import attrgetter
+from typing import Any
 
 import diskcache
 import httpx
@@ -78,7 +78,7 @@ def get_sources(sess: httpx.Client) -> Iterable[Iterable[Product]]:
     ]
 
 
-def get_value(x):
+def get_value(x: Any) -> Any:
     return x.value if x else None
 
 
