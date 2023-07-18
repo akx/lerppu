@@ -97,8 +97,7 @@ def write_html(html_filename: str, df: pd.DataFrame) -> None:
         f.write(
             f"Generated {now}; {len(df)} records. "
             f'Also see <a href="data.csv">data.csv</a> / '
-            f'<a href="data.json">data.json</a> /'
-            f'<a href="data.html">data.html</a>'
+            f'<a href="data.json">data.json</a>'
         )
         f.write("<hr />")
         f.write("<div id='plot'>")
