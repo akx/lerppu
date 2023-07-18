@@ -25,3 +25,8 @@ jobs:
           branch: gh-pages
           folder: output
         if: ${{ github.event_name == 'push' || github.event_name == 'schedule' }}
+        env:
+          GIT_AUTHOR_EMAIL: "lerppu-robot@example.com"
+          GIT_AUTHOR_NAME: "Lerppu Robot"
+          GIT_COMMITTER_EMAIL: "lerppu-robot@example.com"
+          GIT_COMMITTER_NAME: "Lerppu Robot"
