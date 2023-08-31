@@ -1,7 +1,10 @@
+import logging
 import re
 
+log = logging.getLogger(__name__)
+
 size_re = re.compile(
-    r"(?P<num>[0-9][0-9,.]*)\s*(?P<unit>[tgm])[bt]?([\s,]|$)", flags=re.I
+    r"\b(?P<num>[0-9][0-9,.]*)\s*(?P<unit>[tgm])[bt]?([\s,]|$)", flags=re.I
 )
 
 multipliers = {
@@ -9,6 +12,8 @@ multipliers = {
     "g": 1024,
     "m": 1,
 }
+
+MAX_LIKELY_MB_SIZE = 200 * multipliers["t"]  # 200 TB
 
 
 def get_mb_size_from_name(name: str) -> int | None:
@@ -26,6 +31,9 @@ def get_mb_size_from_name(name: str) -> int | None:
         num = float(match.group("num").replace(",", "."))
         mult = multipliers[match.group("unit").lower()]
         size = int(num * mult)
+        if size >= MAX_LIKELY_MB_SIZE:
+            log.warning("Likely invalid size %s in %s", size, name)
+            continue
         sizes_found.add(size)
     if sizes_found:
         return max(sizes_found)
