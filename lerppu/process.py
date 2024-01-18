@@ -21,19 +21,19 @@ def get_sources(sess: httpx.Client) -> Iterable[Iterable[Product]]:
     return [
         verk.get_category_products(
             sess,
-            category_id="3704c",
+            base_filter="category:hard_disk_drives",
             connection_type=ConnectionType.SATA,
             media_type=MediaType.HDD,
         ),
         verk.get_category_products(
             sess,
-            category_id="2225c",
+            base_filter="category:ssd_drives",
             connection_type=ConnectionType.SATA,
             media_type=MediaType.SSD,
         ),
         verk.get_category_products(
             sess,
-            category_id="11860c",
+            base_filter="category:m2_ssd",
             connection_type=ConnectionType.M2,
             media_type=MediaType.SSD,
         ),

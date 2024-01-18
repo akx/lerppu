@@ -39,21 +39,20 @@ def massage_verk(
 def get_category_products(
     cli: httpx.Client,
     *,
-    category_id: str,
+    base_filter: str,
     media_type: MediaType,
     connection_type: ConnectionType,
 ) -> Iterable[Product]:
     for page_no in count(0):
-        log.info(f"Fetching page {page_no + 1} of category {category_id}")
+        log.info(f"Fetching page {page_no + 1} of filter {base_filter}")
         resp = cli.get(
             url="https://web-api.service.verkkokauppa.com/search",
             params={
                 "pageNo": page_no,
                 "pageSize": "48",
-                "sort": "popularity:desc",
+                "sort": "score:desc",
                 "lang": "fi",
-                "context": "category_page",
-                "contextFilter": category_id,
+                "baseFilter": base_filter,
             },
         )
         resp.raise_for_status()
