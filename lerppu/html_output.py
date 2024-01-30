@@ -85,7 +85,7 @@ def get_table_html(df: pd.DataFrame) -> str:
     return sio.getvalue()
 
 
-def write_html(html_filename: str, df: pd.DataFrame) -> None:
+def write_html(html_filename: str, df: pd.DataFrame, *, warnings: list[str]) -> None:
     table_html = get_table_html(df)
     plot_html = get_plot_html(df)
 
@@ -97,6 +97,11 @@ def write_html(html_filename: str, df: pd.DataFrame) -> None:
             f'Also see <a href="data.csv">data.csv</a> / '
             f'<a href="data.json">data.json</a>'
         )
+        if warnings:
+            f.write("Warnings:<ul>")
+            for warning in warnings:
+                f.write(f"<li>{warning}</li>")
+            f.write("</ul>")
         f.write("<hr />")
         f.write("<div id='plot'>")
         f.write(plot_html)
