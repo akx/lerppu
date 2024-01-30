@@ -98,7 +98,7 @@ def write_html(html_filename: str, df: pd.DataFrame, *, warnings: list[str]) -> 
             f'<a href="data.json">data.json</a>'
         )
         if warnings:
-            f.write("Warnings:<ul>")
+            f.write("<hr />Warnings:<ul>")
             for warning in warnings:
                 f.write(f"<li>{warning}</li>")
             f.write("</ul>")
