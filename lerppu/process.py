@@ -87,7 +87,10 @@ def do_process(output_dir: str, use_cache: bool) -> None:
     transport = (
         CachingHTTPTransport(cache=diskcache.Cache("./cache", disk_min_file_size=1048576)) if use_cache else None
     )
-    with httpx.Client(transport=transport) as sess:
+    headers = {
+        "User-Agent": f"{httpx._client.USER_AGENT} (+https://akx.github.io/lerppu/)",
+    }
+    with httpx.Client(transport=transport, headers=headers) as sess:
         products = [prod for prod in chain(*get_sources(sess)) if validate_product(prod)]
 
     log.info("Creating dataframe...")
