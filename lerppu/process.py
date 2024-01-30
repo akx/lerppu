@@ -12,7 +12,7 @@ from lerppu.caching_http_transport import CachingHTTPTransport
 from lerppu.html_output import write_html
 from lerppu.models import ConnectionType, MediaType, Product
 from lerppu.sources import dustinhome, jimms, proshop, verk
-from lerppu.validation import validate_products
+from lerppu.validation import validate_product
 
 log = logging.getLogger(__name__)
 
@@ -88,7 +88,8 @@ def do_process(output_dir: str, use_cache: bool) -> None:
         CachingHTTPTransport(cache=diskcache.Cache("./cache", disk_min_file_size=1048576)) if use_cache else None
     )
     with httpx.Client(transport=transport) as sess:
-        products = list(validate_products(chain(*get_sources(sess))))
+        products = [prod for prod in chain(*get_sources(sess)) if validate_product(prod)]
+
     log.info("Creating dataframe...")
     df = pd.DataFrame(products)
     df["gb_per_eur"] = (df["size_mb"] / df["current_price"] / 1024.0).round(3)
