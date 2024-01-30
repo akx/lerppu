@@ -31,16 +31,13 @@ class CachingHTTPTransport(HTTPTransport):
         if not isinstance(request.stream, ByteStream):  # ah, nope
             return None
         body_hash = hashlib.sha256(request.stream._stream).hexdigest()
+        header_key = "\t".join(f"{k}={v}" for k, v in sorted(request.headers.items()) if k.lower() != "cookie")
         key = "\t".join(
             [
                 request.method,
                 str(request.url),
                 body_hash,
-                "\t".join(
-                    f"{k}={v}"
-                    for k, v in sorted(request.headers.items())
-                    if k.lower() != "cookie"
-                ),
+                header_key,
             ]
         )
         return key

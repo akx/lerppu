@@ -49,9 +49,7 @@ $(document).ready( function () {
 def get_plot_html(df: pd.DataFrame) -> str:
     # Don't plot products that are clearly way out of the usual price range
     culled_df = df[df["current_price"] < df["current_price"].median() * 3]
-    fig = px.scatter(
-        culled_df, x="current_price", y="size_tb", hover_name="id", color="manufacturer"
-    )
+    fig = px.scatter(culled_df, x="current_price", y="size_tb", hover_name="id", color="manufacturer")
     return fig.to_html(
         full_html=False,
         default_width="",

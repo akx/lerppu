@@ -37,9 +37,7 @@ def massage_proshop(
     vendor_sku = infer_sku_from_name(name) or ""
     manufacturer = infer_vendor_from_name(name)
     size = get_mb_size_from_name(name) or get_mb_size_from_name(description)
-    connection_type = (
-        get_connection_type_from_data([name, description]) or ConnectionType.UNKNOWN
-    )
+    connection_type = get_connection_type_from_data([name, description]) or ConnectionType.UNKNOWN
     return Product(
         media_type=media_type,
         connection_type=connection_type,
@@ -57,7 +55,10 @@ def massage_proshop(
 
 
 def get_category_products(
-    cli: httpx.Client, *, category_id: str, media_type: MediaType
+    cli: httpx.Client,
+    *,
+    category_id: str,
+    media_type: MediaType,
 ) -> Iterable[Product]:
     for page_no in count(1):
         log.info(f"Fetching page {page_no} of category {category_id}")

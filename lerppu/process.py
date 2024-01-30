@@ -85,11 +85,7 @@ def get_value(x: Any) -> Any:
 def do_process(output_dir: str, use_cache: bool) -> None:
     log.info("Downloading information...")
     transport = (
-        CachingHTTPTransport(
-            cache=diskcache.Cache("./cache", disk_min_file_size=1048576)
-        )
-        if use_cache
-        else None
+        CachingHTTPTransport(cache=diskcache.Cache("./cache", disk_min_file_size=1048576)) if use_cache else None
     )
     with httpx.Client(transport=transport) as sess:
         products = list(validate_products(chain(*get_sources(sess))))

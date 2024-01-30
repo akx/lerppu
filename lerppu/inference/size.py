@@ -4,7 +4,8 @@ import re
 log = logging.getLogger(__name__)
 
 size_re = re.compile(
-    r"\b(?P<num>[0-9][0-9,.]*)\s*(?P<unit>[tgm])[bt]?([\s,]|$)", flags=re.I
+    r"\b(?P<num>[0-9][0-9,.]*)\s*(?P<unit>[tgm])[bt]?([\s,]|$)",
+    flags=re.I,
 )
 
 multipliers = {

@@ -18,7 +18,8 @@ connection_smells = {
         re.IGNORECASE,
     ),
     ConnectionType.SAS: re.compile(
-        r"SAS[- ]*[1236,]|Serial Attached SCSI", re.IGNORECASE
+        r"SAS[- ]*[1236,]|Serial Attached SCSI",
+        re.IGNORECASE,
     ),
     ConnectionType.SATA: re.compile(
         r"SATA\s*[36]Gb|S(erial )?ATA-(600|150|300)|2.5\" SATA|ATA SSD|SATA$",
@@ -32,7 +33,8 @@ connection_smells = {
 
 
 def _find_smells(
-    strings: Iterable[str | None], smell_map: dict[T, re.Pattern]
+    strings: Iterable[str | None],
+    smell_map: dict[T, re.Pattern],
 ) -> set[T]:
     smells = set()
     for s in strings:
