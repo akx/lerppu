@@ -69,7 +69,12 @@ def get_category_products(
                 "pn": page_no,
             },
         )
-        resp.raise_for_status()
+        try:
+            resp.raise_for_status()
+        except httpx.HTTPStatusError as e:
+            if "Enable JavaScript and cookies to continue" in resp.text:
+                e.add_note("(Smells like a Cloudflare challenge.)")
+            raise
         soup = bs4.BeautifulSoup(resp.content, "html.parser")
         product_lis = list(soup.select("ul#products > li"))
         if not product_lis:
