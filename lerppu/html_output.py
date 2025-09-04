@@ -4,46 +4,52 @@ import io
 import pandas as pd
 import plotly.express as px
 
-HTML_PRELUDE = """<html>
-<head>
-<meta charset="utf-8">
-<style>
+CSS = """
 body, td, th {
     font: 10pt sans-serif;
 }
+
 #plot {
     max-width: 800px;
     max-height: 600px;
 }
+
 table {
-  border-collapse: collapse;
+    border-collapse: collapse;
 }
+
 td, th {
     border: 1px solid #ddd;
 }
-tr:nth-child(even) td {
-    background-color: #eff;
+
+tbody tr:nth-child(even) td {
+    background-color: #ffebc9;
 }
-tr:hover td {
-    background-color: #dee !important;
+
+tr td {
+    padding: 2px 4px !important;
 }
-</style>
-<link rel='stylesheet' href='https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css'>
-</head>
-<body>"""
-HTML_POSTLUDE = """
-<script
-  src="https://code.jquery.com/jquery-3.6.0.slim.min.js"
-  integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI="
-  crossorigin="anonymous"></script>
-<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
-<script>
-$(document).ready( function () {
-    $('#data').DataTable({paging: false});
-} );
-</script>
-</body></html>
+
+tbody tr:hover td {
+    background-color: #fdd688 !important;
+}
 """
+
+JS = """
+new DataTable('#data', {paging: false, columnControl: {
+    target: 1,
+    content: ['search']
+}});
+"""
+
+HTML_PRELUDE = f"""<html>
+<head>
+<meta charset="utf-8">
+<style>{CSS.strip()}</style>
+<link href="https://cdn.datatables.net/v/dt/jq-3.7.0/dt-2.3.3/cc-1.0.7/datatables.min.css" rel="stylesheet" integrity="sha384-irWStpildAd5P04Z1UAYGgYW54WanodOP8m5M7rvGNlztlz5/mD1E5Qq7Rww3mol" crossorigin="anonymous">
+<script src="https://cdn.datatables.net/v/dt/jq-3.7.0/dt-2.3.3/cc-1.0.7/datatables.min.js" integrity="sha384-k0qOqleC3UpZBpt4N0rSCMnK6IG8eznW2RLUB73y4zcvyDKjouzOr7HXENiS5aK+" crossorigin="anonymous"></script>
+<body>"""  # noqa: E501
+HTML_POSTLUDE = f"""<script>{JS.strip()}</script></body></html>"""
 
 
 def get_plot_html(df: pd.DataFrame) -> str:
