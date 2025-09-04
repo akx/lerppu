@@ -22,7 +22,7 @@ connection_smells = {
         re.IGNORECASE,
     ),
     ConnectionType.SATA: re.compile(
-        r"SATA\s*[36]Gb|S(erial )?ATA-(600|150|300)|2.5\" SATA|ATA SSD|SATA$|SATA 6\.0 Gbit/s$",
+        r"SATA\s*[36]Gb|S(erial )?ATA-(600|150|300)|2.5\" SATA|ATA SSD|SATA$|SATA 6\.0 Gbit/s|SATA HDD$",
         re.IGNORECASE,
     ),
     ConnectionType.THUNDERBOLT: re.compile(r"Thunderbolt", re.IGNORECASE),

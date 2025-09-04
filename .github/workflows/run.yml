@@ -7,6 +7,11 @@ on:
     branches: [ master ]
   pull_request:
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   Run:
     runs-on: ubuntu-latest
