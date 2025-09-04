@@ -32,8 +32,6 @@ select = [
     "W",
 ]
 ignore = [
-    "ANN101",
-    "ANN102",
     "ANN003",
     "ANN202",
     "ANN401",
