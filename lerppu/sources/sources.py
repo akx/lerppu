@@ -16,7 +16,7 @@ class ProductSource:
 def get_sources(sess: httpx.Client) -> Iterable[ProductSource]:
     yield from get_verk_sources(sess)
     yield from get_jimms_sources(sess)
-    yield from get_proshop_sources(sess)
+    # yield from get_proshop_sources(sess)
     yield from get_dustinhome_sources(sess)
 
 
