@@ -32,7 +32,7 @@ connection_smells = {
 }
 
 
-def _find_smells(
+def _find_smells[T](
     strings: Iterable[str | None],
     smell_map: dict[T, re.Pattern],
 ) -> set[T]:
