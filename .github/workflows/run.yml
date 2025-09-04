@@ -6,27 +6,28 @@ on:
   push:
     branches: [ master ]
   pull_request:
-    branches: [ master ]
 
 jobs:
   Run:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: astral-sh/setup-uv@v5.1.0
         with:
-          python-version: "3.11"
-          cache: "pip"
-      - run: "pip install -r requirements.txt"
-      - run: python -m lerppu
+          python-version: "3.13"
+      - run: uv run -m lerppu
       - run: touch output/.nojekyll
-      - uses: JamesIves/github-pages-deploy-action@v4
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          branch: gh-pages
-          folder: output
-        if: ${{ github.event_name == 'push' || github.event_name == 'schedule' }}
-        env:
-          GIT_AUTHOR_EMAIL: "lerppu-robot@example.com"
-          GIT_AUTHOR_NAME: "Lerppu Robot"
-          GIT_COMMITTER_EMAIL: "lerppu-robot@example.com"
-          GIT_COMMITTER_NAME: "Lerppu Robot"
+          path: output
+
+  Deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    if: ${{ github.event_name == 'push' || github.event_name == 'schedule' }}
+    needs: Run
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/deploy-pages@v4
