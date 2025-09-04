@@ -18,11 +18,11 @@ connection_smells = {
         re.IGNORECASE,
     ),
     ConnectionType.SAS: re.compile(
-        r"SAS[- ]*[1236,]|Serial Attached SCSI",
+        r"SAS[- ]*[1236,]|Serial Attached SCSI|SAS HDD",
         re.IGNORECASE,
     ),
     ConnectionType.SATA: re.compile(
-        r"SATA\s*[36]Gb|S(erial )?ATA-(600|150|300)|2.5\" SATA|ATA SSD|SATA$",
+        r"SATA\s*[36]Gb|S(erial )?ATA-(600|150|300)|2.5\" SATA|ATA SSD|SATA$|SATA 6\.0 Gbit/s$",
         re.IGNORECASE,
     ),
     ConnectionType.THUNDERBOLT: re.compile(r"Thunderbolt", re.IGNORECASE),
