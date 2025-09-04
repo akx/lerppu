@@ -4,10 +4,10 @@ name = "lerppu"
 version = "0.1.0"
 
 dependencies = [
-    "beautifulsoup4~=4.11",
-    "diskcache~=5.4",
-    "httpx~=0.23",
-    "pandas~=1.4",
+    "beautifulsoup4~=4.13.5",
+    "diskcache~=5.6.3",
+    "httpx>=0.28.1",
+    "pandas~=2.3.2",
     "plotly~=5.9",
 ]
 
