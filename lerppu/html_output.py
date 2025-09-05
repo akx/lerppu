@@ -5,8 +5,50 @@ import pandas as pd
 import plotly.express as px
 
 CSS = """
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap');
+
+:root {
+    --color-neon-carrot-50: #fff8ed;
+    --color-neon-carrot-100: #ffefd5;
+    --color-neon-carrot-200: #fedaaa;
+    --color-neon-carrot-300: #fcbf75;
+    --color-neon-carrot-400: #fa983a;
+    --color-neon-carrot-500: #f87c17;
+    --color-neon-carrot-600: #e9610d;
+    --color-neon-carrot-700: #c1480d;
+    --color-neon-carrot-800: #993913;
+    --color-neon-carrot-900: #7b3113;
+    --color-neon-carrot-950: #431607;
+}
+
 body, td, th {
-    font: 10pt sans-serif;
+    font: 10pt Geist, sans-serif;
+}
+
+body {
+    margin: 0;
+}
+
+header {
+    background-color: var(--color-neon-carrot-200);
+    border-bottom: 1px solid var(--color-neon-carrot-400);
+    padding: 0.5em;
+    text-align: center;
+}
+
+main {
+    margin: 1em;
+}
+
+details {
+    margin-bottom: 1em;
+    border: 1px solid var(--color-neon-carrot-200);
+    padding: 0.5em;
+}
+
+details summary {
+    font-weight: bold;
+    cursor: pointer;
 }
 
 #plot {
@@ -23,7 +65,7 @@ td, th {
 }
 
 tbody tr:nth-child(even) td {
-    background-color: #ffebc9;
+    background-color: var(--color-neon-carrot-50) !important;
 }
 
 tr td {
@@ -31,7 +73,7 @@ tr td {
 }
 
 tbody tr:hover td {
-    background-color: #fdd688 !important;
+    background-color: var(--color-neon-carrot-100) !important;
 }
 """
 
@@ -97,21 +139,23 @@ def write_html(html_filename: str, df: pd.DataFrame, *, warnings: list[str]) -> 
 
     with open(html_filename, "w") as f:
         f.write(HTML_PRELUDE)
-        now = datetime.datetime.utcnow().isoformat()
+        now = datetime.datetime.now(datetime.UTC).isoformat()
         f.write(
+            f"<header>"
             f"Generated {now}; {len(df)} records. "
             f'Also see <a href="data.csv">data.csv</a> / '
             f'<a href="data.json">data.json</a>'
         )
         if warnings:
-            f.write("<hr />Warnings:<ul>")
+            f.write("<div class='warnings'>Warnings:<ul>")
             for warning in warnings:
                 f.write(f"<li>{warning}</li>")
-            f.write("</ul>")
-        f.write("<hr />")
-        f.write("<div id='plot'>")
-        f.write(plot_html)
-        f.write("</div>")
-        f.write("<hr />")
+            f.write("</ul></div>")
+        f.write("</header>")
+        f.write("<main>")
+        f.write("<details><summary>Price/size plot</summary>")
+        f.write(f'<div id="plot">{plot_html}</div>')
+        f.write("</details>")
         f.write(table_html)
+        f.write("</main>")
         f.write(HTML_POSTLUDE)
