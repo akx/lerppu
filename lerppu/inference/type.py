@@ -5,7 +5,7 @@ import re
 from collections.abc import Iterable
 from typing import TypeVar
 
-from lerppu.models import ConnectionType
+from lerppu.models import ConnectionType, MediaType
 
 log = logging.getLogger(__name__)
 
@@ -29,6 +29,11 @@ connection_smells = {
     ConnectionType.U2: re.compile(r"U.2\b", re.IGNORECASE),
     ConnectionType.U3: re.compile(r"U.3\b", re.IGNORECASE),
     ConnectionType.USB: re.compile(r"USB", re.IGNORECASE),
+}
+
+media_smells = {
+    MediaType.HDD: re.compile(r"\bHDD\b|Hard Drive|Hard Disk", re.IGNORECASE),
+    MediaType.SSD: re.compile(r"\bSSD\b|Solid State Drive|Flash Drive", re.IGNORECASE),
 }
 
 
@@ -57,9 +62,16 @@ def get_connection_type_from_data(values: list[str | None]) -> ConnectionType | 
             raise ValueError(f"Too many or too few smells: {smells}")
         return ConnectionType(next(iter(smells)))
     except Exception as exc:
-        log.warning(
-            "Can't get connection type for %r: %s",
-            values,
-            exc,
-        )
+        log.warning("Can't get connection type for %r: %s", values, exc)
+    return None
+
+
+def get_media_type_from_data(values: list[str | None]) -> MediaType | None:
+    try:
+        smells = _find_smells(values, media_smells)
+        if len(smells) != 1:
+            raise ValueError(f"Too many or too few smells: {smells}")
+        return MediaType(next(iter(smells)))
+    except Exception as exc:
+        log.warning("Can't get media type for %r: %s", values, exc)
     return None
