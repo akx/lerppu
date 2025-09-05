@@ -17,7 +17,7 @@ def download_product_info(*, use_cache: bool) -> tuple[list[Product], list[str]]
         CachingHTTPTransport(cache=diskcache.Cache("./cache", disk_min_file_size=1048576)) if use_cache else None
     )
     headers = {
-        "User-Agent": f"{httpx._client.USER_AGENT} (+https://akx.github.io/lerppu/)",
+        "User-Agent": f"Mozilla/5.0 ({httpx._client.USER_AGENT}) (+https://akx.github.io/lerppu/)",
     }
     products = []
     warnings = []

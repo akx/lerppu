@@ -7,6 +7,7 @@ import httpx
 from lerppu.inference.size import get_mb_size_from_name
 from lerppu.inference.vendor import canonicalize_vendor
 from lerppu.models import ConnectionType, MediaType, Product
+from lerppu.sources.base import ProductSource
 
 log = logging.getLogger(__name__)
 
@@ -73,3 +74,33 @@ def get_category_products(
                 media_type=media_type,
                 connection_type=connection_type,
             )
+
+
+def get_jimms_sources(sess: httpx.Client) -> Iterable[ProductSource]:
+    yield ProductSource(
+        name="Jimms SATA",
+        generator=get_category_products(
+            sess,
+            category_id="000-0MU",
+            connection_type=ConnectionType.SATA,
+            media_type=MediaType.HDD,
+        ),
+    )
+    yield ProductSource(
+        name="Jimms SSD",
+        generator=get_category_products(
+            sess,
+            category_id="000-0EE",
+            connection_type=ConnectionType.SATA,
+            media_type=MediaType.SSD,
+        ),
+    )
+    yield ProductSource(
+        name="Jimms M.2",
+        generator=get_category_products(
+            sess,
+            category_id="000-1AR",
+            connection_type=ConnectionType.M2,
+            media_type=MediaType.SSD,
+        ),
+    )

@@ -10,6 +10,7 @@ from lerppu.inference.sku import infer_sku_from_name
 from lerppu.inference.type import get_connection_type_from_data
 from lerppu.inference.vendor import infer_vendor_from_name
 from lerppu.models import ConnectionType, MediaType, Product
+from lerppu.sources.base import ProductSource
 
 log = logging.getLogger(__name__)
 
@@ -81,3 +82,22 @@ def get_category_products(
             break
         for prod in product_lis:
             yield massage_proshop(prod, media_type=media_type)
+
+
+def get_proshop_sources(sess: httpx.Client) -> Iterable[ProductSource]:
+    yield ProductSource(
+        name="Proshop HDD",
+        generator=get_category_products(
+            sess,
+            category_id="Kovalevy",
+            media_type=MediaType.HDD,
+        ),
+    )
+    yield ProductSource(
+        name="Proshop SSD",
+        generator=get_category_products(
+            sess,
+            category_id="SSD",
+            media_type=MediaType.SSD,
+        ),
+    )

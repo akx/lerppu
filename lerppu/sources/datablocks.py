@@ -7,6 +7,7 @@ from lerppu.inference.size import get_mb_size_from_name
 from lerppu.inference.type import get_connection_type_from_data, get_media_type_from_data
 from lerppu.inference.vendor import canonicalize_vendor
 from lerppu.models import MediaType, Product
+from lerppu.sources.base import ProductSource
 
 log = logging.getLogger(__name__)
 
@@ -53,3 +54,10 @@ def get_products(cli: httpx.Client) -> Iterable[Product]:
     for prod in products:
         if p := massage_datablocks(prod):
             yield p
+
+
+def get_datablocks_sources(sess: httpx.Client) -> Iterable[ProductSource]:
+    yield ProductSource(
+        name="Datablocks Refurbished",
+        generator=get_products(sess),
+    )

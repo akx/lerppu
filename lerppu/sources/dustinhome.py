@@ -10,6 +10,7 @@ from lerppu.inference.size import get_mb_size_from_name
 from lerppu.inference.type import get_connection_type_from_data
 from lerppu.inference.vendor import canonicalize_vendor
 from lerppu.models import MediaType, Product
+from lerppu.sources.base import ProductSource
 
 log = logging.getLogger(__name__)
 
@@ -298,3 +299,22 @@ def get_category_products(
                 prod,
                 media_type=media_type,
             )
+
+
+def get_dustinhome_sources(sess: httpx.Client) -> Iterable[ProductSource]:
+    yield ProductSource(
+        name="Dustinhome HDD",
+        generator=get_category_products(
+            sess,
+            category_id="2030994",
+            media_type=MediaType.HDD,
+        ),
+    )
+    yield ProductSource(
+        name="Dustinhome SSD",
+        generator=get_category_products(
+            sess,
+            category_id="2032014",
+            media_type=MediaType.SSD,
+        ),
+    )
