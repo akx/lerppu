@@ -104,3 +104,21 @@ def get_jimms_sources(sess: httpx.Client) -> Iterable[ProductSource]:
             media_type=MediaType.SSD,
         ),
     )
+    yield ProductSource(
+        name="Jimms mSATA",
+        generator=get_category_products(
+            sess,
+            category_id="000-0WR",
+            connection_type=ConnectionType.MSATA,
+            media_type=MediaType.SSD,
+        ),
+    )
+    yield ProductSource(
+        name="Jimms U.2",
+        generator=get_category_products(
+            sess,
+            category_id="000-2D0",
+            connection_type=ConnectionType.U2,
+            media_type=MediaType.SSD,
+        ),
+    )

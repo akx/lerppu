@@ -10,14 +10,15 @@ class MediaType(Enum):
 
 class ConnectionType(Enum):
     M2 = "m2"
+    MSATA = "msata"
     PCIE = "pcie"
     SAS = "sas"
     SATA = "sata"
+    THUNDERBOLT = "thunderbolt"
     U2 = "u2"
     U3 = "u3"
     UNKNOWN = "unknown"
     USB = "usb"
-    THUNDERBOLT = "thunderbolt"
 
 
 @dataclasses.dataclass(frozen=True)
