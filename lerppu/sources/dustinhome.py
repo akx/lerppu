@@ -1,3 +1,4 @@
+import datetime
 import logging
 import uuid
 from collections.abc import Iterable
@@ -12,7 +13,9 @@ from lerppu.models import MediaType, Product
 
 log = logging.getLogger(__name__)
 
-dustin_session_id = uuid.uuid4()
+dustin_session_id = uuid.UUID(
+    int=int(datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0).timestamp() * 1000),
+)
 
 
 def massage_dustinhome(
