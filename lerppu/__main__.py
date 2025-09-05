@@ -1,6 +1,8 @@
 import argparse
 import logging
 
+from rich.logging import RichHandler
+
 from lerppu.process import do_process
 
 
@@ -12,8 +14,9 @@ def main() -> None:
     output_dir = args.output_dir
     logging.basicConfig(
         level=logging.INFO,
-        datefmt="%Y-%m-%d %H:%M:%S",
-        format="%(asctime)s %(name)-32s [%(levelname)-9s] %(message)s",
+        datefmt="[%X]",
+        format="%(message)s",
+        handlers=[RichHandler()],
     )
     do_process(output_dir, use_cache=args.use_cache)
 
