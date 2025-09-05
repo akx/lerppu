@@ -26,7 +26,7 @@ def massage_jimms(
         size_mb=get_mb_size_from_name(name),
         original_price=prod["OvhPriceTax"],  # TODO: not exactly the original price
         current_price=prod["PriceTax"],
-        url=f"https://www.jimms.fi/fi/Product/Show/{prod['Uri']}",
+        url=f"https://www.jimms.fi/fi/{prod['Uri']}",
         vendor_sku=prod["Code"],
         manufacturer=canonicalize_vendor(prod["VendorName"]),
         _original=prod,
