@@ -4,7 +4,7 @@ from collections.abc import Iterable
 import httpx
 
 from lerppu.models import ConnectionType, MediaType, Product
-from lerppu.sources import dustinhome, jimms, proshop, verk
+from lerppu.sources import datablocks, dustinhome, jimms, proshop, verk
 
 
 @dataclasses.dataclass
@@ -18,6 +18,7 @@ def get_sources(sess: httpx.Client) -> Iterable[ProductSource]:
     yield from get_jimms_sources(sess)
     # yield from get_proshop_sources(sess)
     yield from get_dustinhome_sources(sess)
+    yield from get_datablocks_sources(sess)
 
 
 def get_verk_sources(sess: httpx.Client) -> Iterable[ProductSource]:
@@ -115,4 +116,11 @@ def get_dustinhome_sources(sess: httpx.Client) -> Iterable[ProductSource]:
             category_id="2032014",
             media_type=MediaType.SSD,
         ),
+    )
+
+
+def get_datablocks_sources(sess: httpx.Client) -> Iterable[ProductSource]:
+    yield ProductSource(
+        name="Datablocks Refurbished",
+        generator=datablocks.get_products(sess),
     )

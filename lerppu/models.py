@@ -34,3 +34,4 @@ class Product:
     vendor_sku: str
     manufacturer: str
     size_mb: int | None
+    status: str = ""

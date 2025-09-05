@@ -122,6 +122,7 @@ def get_table_html(df: pd.DataFrame) -> str:
             "size_tb",
             "connection_type",
             "media_type",
+            "status",
             "url",
             "original_price",
             "current_price",
