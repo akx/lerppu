@@ -30,7 +30,7 @@ def massage_verk(
         size_mb=get_mb_size_from_name(prod["name"]),
         original_price=prod["price"]["original"],
         current_price=prod["price"]["current"],
-        url=f"https://com/{pid}",
+        url=f"https://verk.com/{pid}",
         vendor_sku=vendor_sku,
         manufacturer=manufacturer,
         _original=prod,
