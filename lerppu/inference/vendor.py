@@ -29,6 +29,7 @@ known_vendors = {
     "sandisk": "Sandisk",
     "seagate": "Seagate",
     "silicon power": "Silicon Power",
+    "synology": "Synology",
     "toshiba": "Toshiba",
     "transcend": "Transcend",
     "verbatim": "Verbatim",
