@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v5.1.0
         with:
-          python-version: "3.13"
+          python-version: "3.14"
       - run: uv run -m lerppu
       - run: touch output/.nojekyll
       - name: Upload artifact
