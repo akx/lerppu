@@ -1,11 +1,12 @@
 import logging
+import uuid
 from collections.abc import Iterable
 from itertools import count
 
 import httpx
 
 from lerppu.inference.size import get_mb_size_from_name
-from lerppu.inference.vendor import canonicalize_vendor
+from lerppu.inference.vendor import infer_vendor_from_name
 from lerppu.models import ConnectionType, MediaType, Product
 from lerppu.sources.base import ProductSource
 
@@ -18,20 +19,23 @@ def massage_verk(
     media_type: MediaType,
     connection_type: ConnectionType,
 ) -> Product:
-    vendor_sku = mpns[0] if (mpns := prod.get("mpns", [])) else ""
-    manufacturer = canonicalize_vendor(prod.get("brand", {}).get("name") or "")
-    pid = prod["pid"]
+    attrs = prod["attributes"]
+    pid = prod["id"]
+    name = attrs["name"]
+    manufacturer = infer_vendor_from_name(name)
+    # vendor_sku = mpns[0] if (mpns := prod.get("mpns", [])) else ""
+    # manufacturer = canonicalize_vendor(prod.get("brand", {}).get("name") or "")
     return Product(
         media_type=media_type,
         connection_type=connection_type,
         id=f"verk:{pid}",
         source="verkkokauppa",
-        name=(prod["name"]),
-        size_mb=get_mb_size_from_name(prod["name"]),
-        original_price=prod["price"]["original"],
-        current_price=prod["price"]["current"],
+        name=name,
+        size_mb=get_mb_size_from_name(name),
+        original_price=attrs["price"]["original"],
+        current_price=attrs["price"]["current"],
         url=f"https://verk.com/{pid}",
-        vendor_sku=vendor_sku,
+        vendor_sku="",  # Not available in search data anymore
         manufacturer=manufacturer,
         _original=prod,
     )
@@ -40,25 +44,28 @@ def massage_verk(
 def get_category_products(
     cli: httpx.Client,
     *,
-    base_filter: str,
+    category_filter: str,
     media_type: MediaType,
     connection_type: ConnectionType,
 ) -> Iterable[Product]:
+    session_id = str(uuid.uuid7())
     for page_no in count(0):
-        log.info(f"Fetching page {page_no + 1} of filter {base_filter}")
+        log.info(f"Fetching page {page_no + 1} of filter {category_filter}")
         resp = cli.get(
-            url="https://web-api.service.verkkokauppa.com/search",
+            url="https://search.service.verkkokauppa.com/fi/api/v1/product-search",
             params={
-                "pageNo": page_no,
-                "pageSize": "48",
-                "sort": "score:desc",
-                "lang": "fi",
-                "baseFilter": base_filter,
+                "filter[base+category][]": [category_filter],
+                "page[number]": page_no + 1,
+                "page[size]": "48",
+                "sort": "-releaseDate",
+                "sessionId": session_id,
+                "private": "true",
+                "include": "campaigns,category,salesCategories.parent,facets",
             },
         )
         resp.raise_for_status()
         data = resp.json()
-        products = data.get("products")
+        products = [p for p in data.get("data") if p["type"] == "products"]
         if not products:
             break
         for prod in products:
@@ -74,7 +81,7 @@ def get_verk_sources(sess: httpx.Client) -> Iterable[ProductSource]:
         name="Verkkis HDDs",
         generator=get_category_products(
             sess,
-            base_filter="category:hard_disk_drives",
+            category_filter="hard_disk_drives",
             connection_type=ConnectionType.SATA,
             media_type=MediaType.HDD,
         ),
@@ -83,7 +90,7 @@ def get_verk_sources(sess: httpx.Client) -> Iterable[ProductSource]:
         name="Verkkis SSDs",
         generator=get_category_products(
             sess,
-            base_filter="category:ssd_drives",
+            category_filter="ssd_drives",
             connection_type=ConnectionType.SATA,
             media_type=MediaType.SSD,
         ),
@@ -92,7 +99,7 @@ def get_verk_sources(sess: httpx.Client) -> Iterable[ProductSource]:
         name="Verkkis M2s",
         generator=get_category_products(
             sess,
-            base_filter="category:m2_ssd",
+            category_filter="m2_ssd",
             connection_type=ConnectionType.M2,
             media_type=MediaType.SSD,
         ),
